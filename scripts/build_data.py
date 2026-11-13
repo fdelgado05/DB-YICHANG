@@ -75,6 +75,10 @@ def num(x):
     x = float(x)
     return str(int(x)) if x.is_integer() else str(x)
 
+def norm_mes(m):
+    m = up(m)
+    return "SEPTIEMBRE" if m == "SETIEMBRE" else m
+
 def mes_label(m):
     return up(m).capitalize()
 
@@ -107,7 +111,7 @@ def leer_base_general(xl):
     bg.columns = COLS
     bg = bg[bg.cliente.notna() & bg.mes.notna()].copy()
     bg["cliente"] = bg.cliente.map(clean)
-    bg["mes"] = bg.mes.map(up)
+    bg["mes"] = bg.mes.map(norm_mes)
     return bg
 
 
@@ -176,7 +180,7 @@ def leer_precios(xl):
     df["modalidad"] = df["MODALIDAD DE VENTA"].map(up).map({"POR UNIDAD": "Unidad", "POR CAJA": "Caja"})
     df["precio"] = df["PRECIO POR UNIDAD"].where(df.modalidad == "Unidad", df["PRECIO POR CAJA"])
     df = df[pd.to_numeric(df.precio, errors="coerce").notna()]
-    df["mes"] = df.MES.map(up)
+    df["mes"] = df.MES.map(norm_mes)
     return df
 
 
